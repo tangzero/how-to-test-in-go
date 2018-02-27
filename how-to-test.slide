@@ -1,0 +1,154 @@
+How to test in Go
+21 Feb 2018
+Tags: go, test
+
+Jairo da Silva
+Senior Software Engineer, Mercado Libre
+@tangzero
+jairo.dasilva@mercadolibre.cl
+
+* Introduction
+
+Software testing is an investigation conducted to provide stakeholders with information about the quality of the software product or service under test.
+
+Software testing can also provide an objective, independent view of the software to allow the business to appreciate and understand the risks of software implementation. 
+
+Test techniques include the process of executing a program or application with the intent of finding software bugs (errors or other defects), and verifying that the software product is fit for use...
+
+* Boring...
+
+.image img/facepalm.png 500 _
+
+* Tools
+
+- Go
+- Visual Studio Code
+
+* Installing Go
+
+- ** OSX
+    brew install go
+
+- ** Linux
+    apt-get, yum, pacman, etc
+
+- ** Windows (arghh)
+    https://golang.org/dl
+
+* Next step
+
+Just create the source folder for your projects:
+
+    mkdir -p ~/go/src
+
+* Env vars
+- GOROOT?
+- GOPATH?
+
+No more! 🎉🎉🎉 
+ ... _except_for_very_special_cases_
+
+* GVM
+
+Pleeeease, don't...
+
+* Show me the f$%!&# code
+
+.image img/share.png 500 _
+
+* Problem to solve
+
+Create a library to execute vector operations.
+
+.image img/operations.png 400 _
+
+* Create the project
+    mkdir -p ~/go/src/github.com/tangzero/vector
+    cd ~/go/src/github.com/tangzero/vector
+    touch vector.go vector_test.go
+
+* Our Vector "class"
+
+.code code/vector/vector.go /package vector/,/Y float64\n}/
+
+* Vector "constructor"
+
+.code code/vector/vector.go /func New/,/{X: x, Y: y}\n.*}/
+
+Encapsulate the complexity of build large structs.
+
+* Testing the Vector constructor
+
+.code code/vector/vector_test.go /package/,/TestNewVector/
+
+- Testing from a different package: black box testing.
+- Testing from the same package: white box testing.
+- import "testing"
+- import the package to be tested
+- A func starting with "Test"
+- Must receive *testing.T
+- Return nothing
+
+* Testing the Vector constructor
+
+.code code/vector/vector_test.go /TestNewVector/,/, y\)\n.*}\n.*}/
+
+	go test .
+	ok      github.com/tangzero/vector      0.006s
+
+😎
+
+* Error output
+
+	go test .
+	--- FAIL: TestNewVector (0.00s)
+			vector_test.go:17: v.Y should be 34.000000
+
+* Vector length
+
+.code code/vector/vector_test.go /TestVectorLen/,/, length\)\n.*}\n.*}/
+
+	go test .
+	# github.com/tangzero/vector_test
+	vector_test.go:26:6: v.Len undefined (type vector.Vector has no field or method Len)
+	FAIL    github.com/tangzero/vector [build failed]
+
+😧
+
+* 
+
+.image img/fine.png 450 _
+
+* Vector length
+
+.code code/vector/vector.go /Len()/,/Sqrt.*\n}/
+	
+	go test .
+	ok      github.com/tangzero/vector      0.006s
+
+
+.image img/osom.gif 300 _
+
+* Vector Add
+
+.code code/vector/vector.go /Add\(/,/other\.Y\)\n}/
+.code code/vector/vector_test.go /TestVectorAdd\(/,/should be 80"\)\n.*}\n}/
+	
+	go test .
+	ok      github.com/tangzero/vector      0.005s
+
+* Vector Sub
+
+.code code/vector/vector.go /Sub\(/,/other\.Y\)\n}/
+.code code/vector/vector_test.go /TestVectorSub\(/,/should be -40"\)\n.*}\n}/
+	
+	go test .
+	ok      github.com/tangzero/vector      0.007s
+
+* Vector Mul, Div, Dist, Polar, etc
+
+.image img/drawing.png 450 _
+
+* Live coding?
+
+.image img/zero.png 450 _
